@@ -1,8 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Loader2 } from "lucide-react";
-import { Card, SectionTitle } from "@/components/ui";
+import { Loader2 } from "lucide-react";import { Card, SectionTitle } from "@/components/ui";
 import type { Quiz, QuizResult } from "@/lib/types";
 
 type Phase = "idle" | "quiz" | "result";
@@ -10,6 +9,7 @@ type Phase = "idle" | "quiz" | "result";
 export default function PracticePage() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [topic, setTopic] = useState("Binary Search");
+  const [customTopic, setCustomTopic] = useState("");
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<QuizResult | null>(null);
@@ -58,7 +58,9 @@ export default function PracticePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black uppercase tracking-wide text-white drop-shadow-sm">Practice</h1>
+        <h1 className="text-3xl font-black uppercase tracking-wide text-white drop-shadow-sm">
+          Practice
+        </h1>
         <p className="font-bold text-white/75">
           Adaptive quizzes: every answer updates your mastery map and reshapes the
           next question.
@@ -67,7 +69,29 @@ export default function PracticePage() {
 
       {phase === "idle" ? (
         <Card>
-          <SectionTitle>Pick a topic</SectionTitle>
+          <SectionTitle>Any topic you want</SectionTitle>
+          <form
+            className="flex flex-col gap-3 sm:flex-row"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const t = customTopic.trim();
+              if (t) {
+                setTopic(t);
+                generate(t);
+              }
+            }}
+          >
+            <input
+              value={customTopic}
+              onChange={(e) => setCustomTopic(e.target.value)}
+              placeholder="Type any topic: Trigonometry, DBMS normalization, Photosynthesis…"
+              className="w-full rounded-full border-2 border-navy/10 bg-white px-5 py-3 font-semibold text-navy outline-none focus:border-coral"
+            />
+            <button type="submit" disabled={busy || !customTopic.trim()} className="btn-primary whitespace-nowrap disabled:opacity-40">
+              Quiz me on it
+            </button>
+          </form>
+          <p className="mt-3 mb-1 text-sm font-extrabold text-navy/50">Or start from a suggested topic:</p>
           <div className="flex flex-wrap gap-2">
             {["Binary Search", "Binary Trees", "Recursion", "Arrays"].map((t) => (
               <button

@@ -173,7 +173,10 @@ export default function LivePage() {
         </p>
       </div>
 
-      <Card className="relative overflow-hidden bg-gradient-to-br from-navy to-[#1e3a6e] p-8 text-white">
+      <Card
+        className="relative overflow-hidden p-8 text-white"
+        style={{ background: "linear-gradient(135deg, #123a63 0%, #1e3a6e 100%)" }}
+      >
         {/* Avatar stage: real video when the Bey session is live, mascot otherwise */}
         <div className="flex min-h-[320px] flex-col items-center justify-center gap-4">
           {connected ? (
@@ -245,11 +248,11 @@ export default function LivePage() {
       </Card>
 
       {connected ? (
-        <Card>
+        <Card className="flex h-[38vh] flex-col">
           <p className="mb-3 text-xs font-extrabold uppercase tracking-wide text-navy/50">
-            Live transcript
+            Live chat: your mic turns Lumi on and off · tap 🎙️ to speak, tap again to send
           </p>
-          <div className="max-h-72 space-y-3 overflow-y-auto">
+          <div className="flex-1 space-y-3 overflow-y-auto pr-1">
             {transcript.map((t, i) => (
               <p
                 key={i}

@@ -171,7 +171,7 @@ export default function ScanPage() {
             </div>
           ) : (
             <div className="grid h-64 place-items-center text-center">
-              <p className="font-bold text-navy/40">
+              <p className="font-bold text-navy/50">
                 <Upload className="mx-auto mb-2 h-8 w-8" aria-hidden />
                 Your scan&apos;s topics, concepts and next actions appear here.
               </p>

@@ -3,11 +3,17 @@ import type { PlanItem } from "@/lib/types";
 export function Card({
   children,
   className = "",
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }) {
-  return <section className={`card p-6 ${className}`}>{children}</section>;
+  return (
+    <section className={`card p-6 ${className}`} style={style}>
+      {children}
+    </section>
+  );
 }
 
 export function SectionTitle({ children }: { children: React.ReactNode }) {

@@ -112,13 +112,13 @@ export default function TutorPage() {
         </Card>
       ) : null}
 
-      {/* Chat */}
-      <Card className="flex min-h-[50vh] flex-col">
+      {/* Chat: fixed-height window, scrolls inside, page never jumps */}
+      <Card className="flex h-[62vh] flex-col">
         <div className="flex-1 space-y-4 overflow-y-auto">
           {messages.length === 0 ? (
             <div className="grid h-full place-items-center py-10 text-center">
               <div>
-                <p className="text-xl font-extrabold text-white/90">
+                <p className="text-xl font-extrabold text-navy/70">
                   Ask anything. Say “I don&apos;t understand this”, that&apos;s enough.
                 </p>
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -141,7 +141,7 @@ export default function TutorPage() {
                 className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-3xl px-5 py-3 ${
+                  className={`max-w-[85%] whitespace-pre-wrap rounded-3xl px-5 py-3 ${
                     m.role === "user"
                       ? "bg-coral text-white"
                       : "bg-lavender text-navy"
