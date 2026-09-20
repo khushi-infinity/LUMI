@@ -40,7 +40,7 @@ export default function TutorPage() {
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages, busy]);
 
   async function send(text?: string) {
@@ -83,7 +83,7 @@ export default function TutorPage() {
             Lumi adapts the explanation to how you learn: pick a mode.
           </p>
         </div>
-        <Mascot thinking={busy} className="h-32 w-32" />
+        <Mascot thinking={busy} className="h-24 w-24" />
       </div>
 
       {/* Mode selector (spec §7–8) */}
@@ -114,7 +114,7 @@ export default function TutorPage() {
 
       {/* Chat: fixed-height window, scrolls inside, page never jumps */}
       <Card className="flex h-[62vh] flex-col">
-        <div className="flex-1 space-y-4 overflow-y-auto">
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto">
           {messages.length === 0 ? (
             <div className="grid h-full place-items-center py-10 text-center">
               <div>
