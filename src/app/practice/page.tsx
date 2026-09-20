@@ -58,8 +58,8 @@ export default function PracticePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-extrabold text-navy">Practice</h1>
-        <p className="font-semibold text-navy/60">
+        <h1 className="text-3xl font-black uppercase tracking-wide text-white drop-shadow-sm">Practice</h1>
+        <p className="font-bold text-white/75">
           Adaptive quizzes: every answer updates your mastery map and reshapes the
           next question.
         </p>

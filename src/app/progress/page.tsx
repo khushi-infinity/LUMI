@@ -37,8 +37,8 @@ export default async function ProgressPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-extrabold text-navy">Progress</h1>
-        <p className="font-semibold text-navy/60">
+        <h1 className="text-3xl font-black uppercase tracking-wide text-white drop-shadow-sm">Progress</h1>
+        <p className="font-bold text-white/75">
           Lumi doesn&apos;t just answer: it models how you learn. This is that
           model.
         </p>

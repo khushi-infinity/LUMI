@@ -51,8 +51,8 @@ export default function ScanPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-navy">Scan &amp; Learn</h1>
-          <p className="font-semibold text-navy/60">
+          <h1 className="text-3xl font-black uppercase tracking-wide text-white drop-shadow-sm">Scan &amp; Learn</h1>
+          <p className="font-bold text-white/75">
             Point, snap, understand: textbooks, handwriting, diagrams, objects.
           </p>
         </div>

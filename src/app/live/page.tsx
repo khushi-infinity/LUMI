@@ -119,8 +119,8 @@ export default function LivePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-extrabold text-navy">Live Tutor</h1>
-        <p className="font-semibold text-navy/60">
+        <h1 className="text-3xl font-black uppercase tracking-wide text-white drop-shadow-sm">Live Tutor</h1>
+        <p className="font-bold text-white/75">
           Talk to Lumi like a real tutor: interrupt, ask, think out loud.
         </p>
       </div>

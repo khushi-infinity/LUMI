@@ -1,51 +1,88 @@
 @import "tailwindcss";
 
 /*
- * LUMI design system (spec §37–42)
- * Bright and energetic, not corporate SaaS.
- * Duolingo personality × Linear usability × premium AI aesthetics.
+ * LUMI design system, v2.
+ * Visual reference: FUNTYX streaming hero.
+ * Rounded blue "device" frame, giant white display type, glassy chips,
+ * big friendly 3D mascot bleeding off the edge, floating clouds.
  */
 @theme {
-  --color-sky-electric: #3bb4f6; /* dominant background */
-  --color-sky-deep: #1a9de8;
+  --color-sky-electric: #3fa9f5; /* page + frame base */
+  --color-sky-bright: #5cc0ff; /* gradient top */
+  --color-sky-deep: #1f7fd1; /* gradient bottom */
   --color-coral: #ff7a59; /* CTA + accents */
   --color-coral-deep: #f45d38;
-  --color-cream: #fff6ea; /* soft surfaces */
-  --color-navy: #12224b; /* dark ink */
-  --color-lavender: #e6e2ff; /* subtle supporting surface */
-  --color-lime-ok: #3ecf8e; /* mastery: strong */
-  --color-amber-mid: #ffc24b; /* mastery: developing */
-  --color-rose-low: #ff6b6b; /* mastery: needs attention */
-  --color-cloud: #f2f9ff; /* near-white card */
+  --color-cream: #fff6ea;
+  --color-navy: #123a63; /* ink on light surfaces */
+  --color-lavender: #e6e2ff;
+  --color-lime-ok: #3ecf8e;
+  --color-amber-mid: #ffc24b;
+  --color-rose-low: #ff6b6b;
+  --color-cloud: #f2f9ff;
 
-  --radius-card: 24px; /* spec §38: large rounded corners */
+  --radius-frame: 36px;
   --font-sans: var(--font-nunito), ui-rounded, system-ui, sans-serif;
 }
 
 body {
-  background: var(--color-sky-electric);
+  background: #2f8fd9;
   color: var(--color-navy);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
-/* Signature card surface */
-.card {
-  background: var(--color-cloud);
-  border-radius: var(--radius-card);
-  box-shadow:
-    0 1px 0 rgba(18, 34, 75, 0.04),
-    0 12px 32px -12px rgba(18, 34, 75, 0.18);
+/* The rounded blue "device" that wraps every page (FUNTYX frame). */
+.lumi-frame {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--color-sky-bright) 0%, var(--color-sky-electric) 45%, var(--color-sky-deep) 100%);
+  border-radius: var(--radius-frame);
 }
 
-/* One primary action per screen (spec §38) */
+/* Glassy chip used for eyebrows, meta info, and small labels. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 9999px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* Card surfaces stay light for readability inside the blue frame. */
+.card {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 28px;
+  box-shadow:
+    0 1px 0 rgba(18, 58, 99, 0.05),
+    0 18px 40px -18px rgba(9, 44, 84, 0.35);
+}
+
+.card-glass {
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 28px;
+}
+
+/* One primary action per screen (spec §38). */
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
   background: var(--color-coral);
-  color: white;
+  color: #fff;
   font-weight: 800;
   border-radius: 9999px;
-  padding: 0.8rem 1.6rem;
-  box-shadow: 0 8px 20px -6px rgba(244, 93, 56, 0.55);
+  padding: 0.85rem 1.6rem;
+  box-shadow: 0 10px 24px -8px rgba(244, 93, 56, 0.6);
   transition: transform 0.15s ease, background 0.15s ease;
 }
 .btn-primary:hover {
@@ -53,21 +90,34 @@ body {
   transform: translateY(-1px);
 }
 .btn-secondary {
-  background: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
   color: var(--color-navy);
-  font-weight: 700;
+  font-weight: 800;
   border-radius: 9999px;
-  padding: 0.8rem 1.6rem;
+  padding: 0.85rem 1.5rem;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .btn-secondary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px -10px rgba(18, 34, 75, 0.35);
+  box-shadow: 0 10px 24px -12px rgba(9, 44, 84, 0.4);
 }
 
-/* Animated progress bar (spec §41) */
+/* Display type for hero titles: huge, white, uppercase, tight, like FUNTYX. */
+.display {
+  color: #fff;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  text-shadow: 0 4px 24px rgba(9, 44, 84, 0.25);
+}
+
+/* Animated progress bar (spec §41). */
 .progress-track {
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.35);
   border-radius: 9999px;
   overflow: hidden;
 }
@@ -75,4 +125,11 @@ body {
   background: linear-gradient(90deg, var(--color-lime-ok), var(--color-coral));
   border-radius: 9999px;
   transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Floating cloud decorations. */
+.cloud {
+  position: absolute;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 18px rgba(9, 44, 84, 0.18));
 }

@@ -78,8 +78,8 @@ export default function TutorPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-navy">AI Tutor</h1>
-          <p className="font-semibold text-navy/60">
+          <h1 className="text-3xl font-black uppercase tracking-wide text-white drop-shadow-sm">AI Tutor</h1>
+          <p className="font-bold text-white/75">
             Lumi adapts the explanation to how you learn: pick a mode.
           </p>
         </div>
@@ -118,7 +118,7 @@ export default function TutorPage() {
           {messages.length === 0 ? (
             <div className="grid h-full place-items-center py-10 text-center">
               <div>
-                <p className="text-xl font-extrabold text-navy/70">
+                <p className="text-xl font-extrabold text-white/90">
                   Ask anything. Say “I don&apos;t understand this”, that&apos;s enough.
                 </p>
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -153,7 +153,7 @@ export default function TutorPage() {
             ))
           )}
           {busy ? (
-            <div className="flex items-center gap-2 font-bold text-navy/60">
+            <div className="flex items-center gap-2 font-bold text-white/85">
               <span className="inline-block h-2.5 w-2.5 animate-bounce rounded-full bg-coral" />
               Lumi is thinking…
             </div>
