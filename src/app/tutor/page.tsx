@@ -176,7 +176,11 @@ export default function TutorPage() {
           />
           <button
             type="submit"
-            disabled={busy || !input.trim()}
+            onClick={(e) => {
+              e.preventDefault();
+              send();
+            }}
+            disabled={busy}
             className="btn-primary grid w-12 place-items-center px-0 disabled:opacity-40"
             aria-label="Send"
           >
