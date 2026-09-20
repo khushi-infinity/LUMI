@@ -9,11 +9,15 @@ LUMI is a multimodal AI learning companion built for the **Bharat Builds Tour: F
 | --- | --- |
 | ![Home](docs/screenshots/home.png) | ![Live](docs/screenshots/live.png) |
 
-| AI Tutor (Socratic mode) | Progress (knowledge graph + streak calendar) |
+| AI Tutor (with a live chat) | Progress (knowledge graph + streak calendar) |
 | --- | --- |
 | ![Tutor](docs/screenshots/tutor.png) | ![Progress](docs/screenshots/progress.png) |
 
-> 📸 Drop your 4 screenshots into `docs/screenshots/` with these names and they render above.
+| Scan & Learn (photo or PDF) | Practice (adaptive quiz on any topic) |
+| --- | --- |
+| ![Scan](docs/screenshots/scan.png) | ![Practice](docs/screenshots/practice.png) |
+
+> Screenshots live in `docs/screenshots/` (captured via `scripts/capture-screens.cjs`).
 
 ---
 
