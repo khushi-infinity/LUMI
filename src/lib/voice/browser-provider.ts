@@ -1,6 +1,6 @@
 import type { VoiceProvider } from "@/lib/voice/types";
 
-/** BrowserVoiceProvider — zero-dependency fallback via Web Speech API. */
+/** BrowserVoiceProvider: zero-dependency fallback via Web Speech API. */
 export class BrowserVoiceProvider implements VoiceProvider {
   readonly name = "browser";
   readonly supportsSTT = true;

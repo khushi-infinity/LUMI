@@ -2,13 +2,13 @@ import { NextResponse } from "next/server";
 import { buildTutorContext } from "@/lib/learning-engine";
 import { getMemoryStore } from "@/lib/memory";
 
-/** GET /api/memory/context — what LUMI knows about this student right now. */
+/** GET /api/memory/context: what LUMI knows about this student right now. */
 export async function GET() {
   const context = await buildTutorContext();
   return NextResponse.json(context);
 }
 
-/** POST /api/memory/update — log a learning event or focus minutes. */
+/** POST /api/memory/update: log a learning event or focus minutes. */
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as {

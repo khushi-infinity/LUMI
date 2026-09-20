@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getMemoryStore } from "@/lib/memory";
 
-/** GET /api/progress — everything the Progress screen needs (spec §6). */
+/** GET /api/progress: everything the Progress screen needs (spec §6). */
 export async function GET() {
   const store = getMemoryStore();
   const [profile, mastery, plan, events] = await Promise.all([

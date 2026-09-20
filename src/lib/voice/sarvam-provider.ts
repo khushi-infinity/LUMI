@@ -1,7 +1,7 @@
 import type { VoiceProvider } from "@/lib/voice/types";
 
 /**
- * SarvamVoiceProvider — Indian-language STT/TTS (spec §11).
+ * SarvamVoiceProvider: Indian-language STT/TTS (spec §11).
  *
  * Wire-up (when SARVAM_API_KEY is present):
  *   STT  → Sarvam Saaras (transcription / translation / code-mixed)

@@ -9,7 +9,7 @@ const STATE_COLOR: Record<string, string> = {
 
 /**
  * Knowledge graph (spec §21): one of the most visually interesting screens.
- * Color states — 🟢 strong, 🟡 developing, 🔴 needs attention, ⚪ not studied.
+ * Color states: 🟢 strong, 🟡 developing, 🔴 needs attention, ⚪ not studied.
  * Layout: simple parent/child tree rendered as SVG (no layout lib needed).
  */
 export function KnowledgeGraph({ mastery }: { mastery: ConceptMastery[] }) {

@@ -8,7 +8,7 @@ submit handwritten solutions for mistake analysis, take adaptive quizzes, and
 get study plans that reshape themselves around detected weaknesses.
 
 Most AI tutors answer questions. **Lumi builds an evolving model of how you
-learn** — mastery, mistakes, goals, plans, progress — and adapts what you
+learn** (mastery, mistakes, goals, plans, progress) and adapts what you
 should learn next. The combination is the product.
 
 ## Demo
@@ -23,11 +23,11 @@ npm run dev
 ## Problem
 
 Students juggle YouTube + ChatGPT + Notion + Anki + Calendar + quiz apps.
-The student becomes the system connecting all of them — and current AI tutors
+The student becomes the system connecting all of them: and current AI tutors
 don't know what the student already understands, what they got wrong yesterday,
 or what's in their textbook.
 
-## Solution — the learning loop
+## Solution: the learning loop
 
 ```
 LEARN → PRACTICE → MEASURE → FIND WEAKNESS → REINFORCE → PLAN NEXT STEP
@@ -41,7 +41,7 @@ student's mastery model and reshapes their plan.
 | Area | What it does |
 | --- | --- |
 | **Home** | Personalized command center: greeting, 3D mascot, progress, today's plan, streak |
-| **AI Tutor** | Text chat with explanation modes incl. **Socratic mode** — asks instead of answering |
+| **AI Tutor** | Text chat with explanation modes incl. **Socratic mode**: asks instead of answering |
 | **Live Tutor** | Real-time digital-human session (Beyond Presence avatar via LiveKit, voice via Sarvam → browser fallback) |
 | **Scan & Learn** | Textbook / handwriting / diagram analysis with misconception detection |
 | **Practice** | Adaptive quizzes: weak concepts first; every submit updates mastery |
@@ -55,7 +55,7 @@ Student → Next.js UI → API routes → Learning Engine → AI provider
                      memory (DynamoDB) ─┴─ AI (Bedrock + Nova vision)
 ```
 
-- The **frontend never orchestrates AI directly** — every AI call goes through
+- The **frontend never orchestrates AI directly**: every AI call goes through
   API Gateway-equivalent route handlers (spec, final architecture note).
 - Every AI surface has a **structured output schema** (spec §49): explanations,
   quizzes, notes, scans, plans. No arbitrary LLM blobs.
@@ -105,7 +105,7 @@ Otherwise → demo providers with identical behavior.
 ```
 VoiceService
 ├── SarvamVoiceProvider   (Saaras STT · Bulbul TTS · Indian languages, code-mixed)
-└── BrowserVoiceProvider  (Web Speech API fallback — always available)
+└── BrowserVoiceProvider  (Web Speech API fallback: always available)
 ```
 
 Keys stay server-side; voice calls proxy through the backend.
@@ -119,13 +119,13 @@ over LiveKit. See `src/app/live/page.tsx` for the integration points.
 ## Tech stack
 
 Next.js (App Router) · TypeScript · Tailwind CSS v4 · Framer Motion-ready ·
-React Three Fiber (mascot only — don't turn the app into a WebGL experiment) ·
+React Three Fiber (mascot only: don't turn the app into a WebGL experiment) ·
 lucide-react · AWS SDK v3.
 
 ## Getting started
 
 ```bash
-cp .env.example .env.local   # optional — demo mode needs nothing
+cp .env.example .env.local   # optional: demo mode needs nothing
 npm install
 npm run dev
 ```

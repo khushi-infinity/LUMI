@@ -39,7 +39,7 @@ export default async function ProgressPage() {
       <div>
         <h1 className="text-3xl font-extrabold text-navy">Progress</h1>
         <p className="font-semibold text-navy/60">
-          Lumi doesn&apos;t just answer — it models how you learn. This is that
+          Lumi doesn&apos;t just answer: it models how you learn. This is that
           model.
         </p>
       </div>
@@ -132,7 +132,7 @@ export default async function ProgressPage() {
           <ul className="space-y-2.5">
             {events.length === 0 ? (
               <li className="font-semibold text-navy/40">
-                Start learning and events land here — every quiz, scan, and
+                Start learning and events land here: every quiz, scan, and
                 focus session feeds the model.
               </li>
             ) : (

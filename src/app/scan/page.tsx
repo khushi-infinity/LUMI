@@ -39,7 +39,7 @@ export default function ScanPage() {
         if (data.error) setError(data.error);
         else setResult(data);
       } catch {
-        setError("Analysis failed — try again.");
+        setError("Analysis failed: try again.");
       } finally {
         setBusy(false);
       }
@@ -53,7 +53,7 @@ export default function ScanPage() {
         <div>
           <h1 className="text-3xl font-extrabold text-navy">Scan &amp; Learn</h1>
           <p className="font-semibold text-navy/60">
-            Point, snap, understand — textbooks, handwriting, diagrams, objects.
+            Point, snap, understand: textbooks, handwriting, diagrams, objects.
           </p>
         </div>
         <Mascot thinking={busy} className="h-28 w-28" />
@@ -149,7 +149,7 @@ export default function ScanPage() {
                   </p>
                   {result.mistakes.map((m, i) => (
                     <p key={i} className="font-semibold text-navy">
-                      <strong>Step:</strong> {m.step} — {m.issue}
+                      <strong>Step:</strong> {m.step}: {m.issue}
                       <br />
                       <strong className="text-lime-ok">Fix:</strong> {m.fix}
                     </p>

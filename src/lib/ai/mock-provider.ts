@@ -12,7 +12,7 @@ import type {
 } from "@/lib/types";
 
 /**
- * DemoProvider — zero-config fallback so LUMI runs before any AWS keys exist.
+ * DemoProvider: zero-config fallback so LUMI runs before any AWS keys exist.
  * Every method returns the same structured shapes as the Bedrock provider,
  * so swapping providers never touches product code (spec §11).
  */
@@ -24,12 +24,12 @@ export class DemoProvider implements AiProvider {
     if (req.mode === "socratic") return { reply: socratic(topic, req.message), mode: "socratic" as const };
 
     const replies: Record<ExplanationMode, string> = {
-      simple: `Here's ${topic} in one breath: it's a way to solve the problem by **halving the search space at every step**. Instead of checking everything, you check the middle and immediately know which half to throw away. That's why it's fast — 1,000,000 items take at most 20 checks.`,
-      detailed: `**${topic}** — the full picture:\n\n1. **Precondition**: the data must be sorted. This is not optional — the algorithm's correctness proof relies on it.\n2. **Invariant**: if the target exists, it always lives inside \`[lo, hi]\`. Every step preserves this invariant.\n3. **Step**: compute \`mid = lo + (hi - lo) / 2\`. Compare, then discard the impossible half.\n4. **Termination**: the interval shrinks every iteration, so the loop must end.\n\nThe two classic bug sources are the midpoint overflow (\`lo + hi\` can overflow; use \`lo + (hi-lo)/2\`) and off-by-one boundary conditions (\`<\` vs \`<=\`, \`hi = mid\` vs \`hi = mid - 1\`).`,
-      visual: `Picture a phone book with 1,000 pages. Open the **middle** (page 500). Is your name before or after? You just threw away 500 pages. Open the middle of what's left... after 10 opens you're done.\n\nThat's ${topic}: every step halves the remaining possibilities — 1000 → 500 → 250 → ... → 1.`,
-      "example-first": `Example first 🔍 — find **23** in [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]:\n\n- lo=0, hi=9 → mid=4 → arr[4]=16 < 23 → search **right** half\n- lo=5, hi=9 → mid=7 → arr[7]=56 > 23 → search **left** half\n- lo=5, hi=6 → mid=5 → arr[5]=23 ✅ **found in 3 steps**\n\nTen elements, three comparisons. That's the whole trick behind ${topic}.`,
+      simple: `Here's ${topic} in one breath: it's a way to solve the problem by **halving the search space at every step**. Instead of checking everything, you check the middle and immediately know which half to throw away. That's why it's fast: 1,000,000 items take at most 20 checks.`,
+      detailed: `**${topic}**: the full picture:\n\n1. **Precondition**: the data must be sorted. This is not optional: the algorithm's correctness proof relies on it.\n2. **Invariant**: if the target exists, it always lives inside \`[lo, hi]\`. Every step preserves this invariant.\n3. **Step**: compute \`mid = lo + (hi - lo) / 2\`. Compare, then discard the impossible half.\n4. **Termination**: the interval shrinks every iteration, so the loop must end.\n\nThe two classic bug sources are the midpoint overflow (\`lo + hi\` can overflow; use \`lo + (hi-lo)/2\`) and off-by-one boundary conditions (\`<\` vs \`<=\`, \`hi = mid\` vs \`hi = mid - 1\`).`,
+      visual: `Picture a phone book with 1,000 pages. Open the **middle** (page 500). Is your name before or after? You just threw away 500 pages. Open the middle of what's left... after 10 opens you're done.\n\nThat's ${topic}: every step halves the remaining possibilities: 1000 → 500 → 250 → ... → 1.`,
+      "example-first": `Example first 🔍: find **23** in [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]:\n\n- lo=0, hi=9 → mid=4 → arr[4]=16 < 23 → search **right** half\n- lo=5, hi=9 → mid=7 → arr[7]=56 > 23 → search **left** half\n- lo=5, hi=6 → mid=5 → arr[5]=23 ✅ **found in 3 steps**\n\nTen elements, three comparisons. That's the whole trick behind ${topic}.`,
       "exam-focused": `**Exam answer for ${topic}** ✍️\n\n- **Definition**: search a *sorted* array by repeatedly halving the search interval.\n- **Complexity**: O(log n) time, O(1) space (iterative).\n- **Precondition**: array must be sorted ascending.\n- **Standard 2-mark trap**: forgetting the sorted precondition or writing \`mid = (lo + hi) / 2\` without noting the overflow issue.\n- **Classic variant questions**: first/last occurrence, count of occurrences, search in rotated array.`,
-      "interview-focused": `**Interview lens** 🎯\n\nWhat the interviewer checks when you write ${topic}:\n1. Do you state the sorted precondition *before* coding?\n2. Do you get the loop condition and boundary updates right without hesitation?\n3. Can you reason about the invariant out loud?\n\nStrong move: say "I'll maintain the invariant that the target, if present, is always in [lo, hi]" — then every line you write justifies itself.`,
+      "interview-focused": `**Interview lens** 🎯\n\nWhat the interviewer checks when you write ${topic}:\n1. Do you state the sorted precondition *before* coding?\n2. Do you get the loop condition and boundary updates right without hesitation?\n3. Can you reason about the invariant out loud?\n\nStrong move: say "I'll maintain the invariant that the target, if present, is always in [lo, hi]": then every line you write justifies itself.`,
       socratic: socratic(topic, req.message),
     };
     return { reply: replies[req.mode], mode: req.mode };
@@ -77,7 +77,7 @@ export class DemoProvider implements AiProvider {
       ],
       flashcards: [
         { question: `Why must input be sorted for ${topic}?`, answer: "The halving decision assumes order tells you which half to discard." },
-        { question: `Time complexity of ${topic}?`, answer: "O(log n) — the search space halves each iteration." },
+        { question: `Time complexity of ${topic}?`, answer: "O(log n): the search space halves each iteration." },
         { question: "Overflow-safe midpoint?", answer: "mid = lo + (hi - lo) / 2" },
       ],
       common_mistakes: [
@@ -180,7 +180,7 @@ function detectTopic(message: string): string {
 }
 
 function socratic(topic: string, message: string): string {
-  return `Good question. Before I answer — let's reason it out together 🤔\n\nYou asked: "${message.trim()}"\n\nThink about ${topic} this way: **what must still be true about the part of the problem you haven't eliminated yet?**\n\nTake your best guess — even a wrong guess tells me exactly where your model needs adjusting, and that's the point. What do you think happens after the first comparison?`;
+  return `Good question. Before I answer, let's reason it out together 🤔\n\nYou asked: "${message.trim()}"\n\nThink about ${topic} this way: **what must still be true about the part of the problem you haven't eliminated yet?**\n\nTake your best guess. Even a wrong guess tells me exactly where your model needs adjusting, and that's the point. What do you think happens after the first comparison?`;
 }
 
 /* ── quiz banks ──────────────────────────────────────────────────── */
@@ -220,7 +220,7 @@ function binarySearchQuiz(weak?: string[]): Quiz {
       type: "mcq" as const,
       options: ["return mid", "hi = mid - 1, remember mid as candidate", "lo = mid + 1", "expand both ways"],
       correct_answer: "hi = mid - 1, remember mid as candidate",
-      explanation: "An earlier occurrence may still exist, so keep searching the left half — the classic boundary-condition case.",
+      explanation: "An earlier occurrence may still exist, so keep searching the left half: the classic boundary-condition case.",
       concept: "binary_search_boundary",
     },
     {
@@ -228,12 +228,12 @@ function binarySearchQuiz(weak?: string[]): Quiz {
       question: "What is the time complexity and why?",
       type: "mcq" as const,
       options: [
-        "O(n) — each element may be checked once",
-        "O(log n) — the search space halves each step",
-        "O(n log n) — sorting dominates",
-        "O(1) — constant comparisons",
+        "O(n): each element may be checked once",
+        "O(log n): the search space halves each step",
+        "O(n log n): sorting dominates",
+        "O(1): constant comparisons",
       ],
-      correct_answer: "O(log n) — the search space halves each step",
+      correct_answer: "O(log n): the search space halves each step",
       explanation: "Halving n repeatedly reaches 1 in ⌈log₂ n⌉ steps.",
       concept: "binary_search_complexity",
     },
@@ -241,9 +241,9 @@ function binarySearchQuiz(weak?: string[]): Quiz {
       id: "q6",
       question: "In `while (lo <= hi)` with `hi = mid - 1`, forgetting the `- 1` causes:",
       type: "mcq" as const,
-      options: ["Wrong answer on some inputs", "Infinite loop", "Compile error", "Nothing — it's equivalent"],
+      options: ["Wrong answer on some inputs", "Infinite loop", "Compile error", "Nothing: it's equivalent"],
       correct_answer: "Infinite loop",
-      explanation: "Without shrinking, the interval can stop changing — a boundary-condition bug.",
+      explanation: "Without shrinking, the interval can stop changing: a boundary-condition bug.",
       concept: "binary_search_boundary",
     },
   ];
@@ -281,8 +281,8 @@ function treeQuiz(weak?: string[]): Quiz {
       id: "q3",
       question: "Which traversal uses the most auxiliary space for a skewed tree (recursive)?",
       type: "mcq" as const,
-      options: ["Inorder", "Preorder", "Postorder", "All the same — O(n) call stack"],
-      correct_answer: "All the same — O(n) call stack",
+      options: ["Inorder", "Preorder", "Postorder", "All the same: O(n) call stack"],
+      correct_answer: "All the same: O(n) call stack",
       explanation: "Recursion depth equals tree height; a skewed tree has height n.",
       concept: "tree_recursion",
     },
@@ -297,7 +297,7 @@ function treeQuiz(weak?: string[]): Quiz {
         "The root is the minimum",
       ],
       correct_answer: "Only the immediate children obey the ordering",
-      explanation: "The property applies to entire subtrees — checking only children is the classic mistake.",
+      explanation: "The property applies to entire subtrees: checking only children is the classic mistake.",
       concept: "tree_bst_property",
     },
     {

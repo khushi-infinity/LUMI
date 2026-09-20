@@ -1,6 +1,6 @@
 /**
  * Structured AI outputs (spec §49).
- * The LLM never returns arbitrary blobs — every AI surface has a schema.
+ * The LLM never returns arbitrary blobs: every AI surface has a schema.
  */
 
 export type ExplanationMode =

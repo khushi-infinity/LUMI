@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       await store.addMinutesLearning(minutes);
       await logLearningEvent(
         "FOCUS_SESSION_COMPLETED",
-        `${body.topic ?? "General"} — ${minutes} min`,
+        `${body.topic ?? "General"}: ${minutes} min`,
       );
       return NextResponse.json({
         ok: true,
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 
     await logLearningEvent(
       "CONCEPT_VIEWED",
-      `Focus session started: ${body.topic ?? "General"} — ${body.goal ?? ""}`,
+      `Focus session started: ${body.topic ?? "General"}: ${body.goal ?? ""}`,
     );
     return NextResponse.json({ ok: true });
   } catch (err) {

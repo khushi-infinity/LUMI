@@ -5,7 +5,7 @@ import { useRef } from "react";
 import type { Group, Mesh } from "three";
 
 /**
- * Lumi — small floating AI creature (spec §40):
+ * Lumi: small floating AI creature (spec §40):
  * rounded body, expressive eyes, small antenna light, blue/orange accents.
  * Used across home, loading, empty states and tutor interactions (spec §41).
  */

@@ -49,7 +49,7 @@ SK = event#<ts>                   → LearningEvent
 The LLM must return JSON matching schemas in `src/lib/types.ts`:
 `Explanation`, `Quiz`, `Notes`, `ScanResult`, `StudyPlan`. The Bedrock provider
 asks for JSON via the system prompt and falls back to the demo response if the
-model output is unparseable — a flaky model can never crash a screen.
+model output is unparseable: a flaky model can never crash a screen.
 
 ## Live tutor separation (spec §10, final note)
 

@@ -15,7 +15,7 @@ import type {
 } from "@/lib/types";
 
 /**
- * BedrockProvider — the real AI layer (spec §34).
+ * BedrockProvider: the real AI layer (spec §34).
  * Bedrock is the central intelligence: tutoring, reasoning, quizzes, notes,
  * and Nova multimodal understanding for Scan & Learn.
  *
@@ -62,7 +62,7 @@ export class BedrockProvider implements AiProvider {
   async tutorChat(req: TutorRequest) {
     const system = [
       "You are Lumi, a warm, precise AI tutor for students aged 15–25.",
-      `Explanation mode: ${req.mode}. In socratic mode, reply ONLY with a guiding question plus a small hint — never the full answer.`,
+      `Explanation mode: ${req.mode}. In socratic mode, reply ONLY with a guiding question plus a small hint: never the full answer.`,
       "Adapt length to the mode: simple=short, detailed=structured with headings, exam-focused=crisp mark-scoring points, interview-focused=what an interviewer probes.",
       req.context
         ? `Student context you already know: ${req.context}`

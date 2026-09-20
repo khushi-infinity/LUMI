@@ -2,7 +2,7 @@
   "name": "lumi",
   "version": "0.1.0",
   "private": true,
-  "description": "LUMI — your AI tutor that sees, hears, teaches and learns with you.",
+  "description": "LUMI: your AI tutor that sees, hears, teaches and learns with you.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

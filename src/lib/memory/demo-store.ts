@@ -8,7 +8,7 @@ import type {
 } from "@/lib/types";
 
 /**
- * DemoStore — seeded in-memory implementation of the student memory.
+ * DemoStore: seeded in-memory implementation of the student memory.
  * Shape-compatible with the DynamoDB store: swap by env var, zero product changes.
  */
 const PROFILE: StudentProfile = {

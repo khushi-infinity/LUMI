@@ -11,9 +11,9 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "LUMI — Your AI tutor that sees, hears, teaches and learns with you",
+  title: "LUMI: Your AI tutor that sees, hears, teaches and learns with you",
   description:
-    "Lumi is a multimodal AI tutor. Talk, scan, practice and progress — it builds an evolving model of how you learn.",
+    "Lumi is a multimodal AI tutor. Talk, scan, practice and progress: it builds an evolving model of how you learn.",
 };
 
 export default async function RootLayout({

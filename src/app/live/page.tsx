@@ -105,13 +105,13 @@ export default function LivePage() {
         }),
       });
       const data = (await res.json()) as { reply?: string };
-      const reply = data.reply ?? "Sorry, I lost that one — say it again?";
+      const reply = data.reply ?? "Sorry, I lost that one: say it again?";
       setTranscript((t) => [...t, { who: "lumi", text: reply }]);
       await speak(reply.replace(/[*`#]/g, "").slice(0, 600));
     } catch {
       setTranscript((t) => [
         ...t,
-        { who: "lumi", text: "Connection hiccup — let's try that again." },
+        { who: "lumi", text: "Connection hiccup: let's try that again." },
       ]);
     }
   }
@@ -121,7 +121,7 @@ export default function LivePage() {
       <div>
         <h1 className="text-3xl font-extrabold text-navy">Live Tutor</h1>
         <p className="font-semibold text-navy/60">
-          Talk to Lumi like a real tutor — interrupt, ask, think out loud.
+          Talk to Lumi like a real tutor: interrupt, ask, think out loud.
         </p>
       </div>
 

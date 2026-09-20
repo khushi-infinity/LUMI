@@ -67,7 +67,7 @@ export default function TutorPage() {
     } catch {
       setMessages((m) => [
         ...m,
-        { role: "assistant", content: "Network hiccup — try again." },
+        { role: "assistant", content: "Network hiccup: try again." },
       ]);
     } finally {
       setBusy(false);
@@ -80,7 +80,7 @@ export default function TutorPage() {
         <div>
           <h1 className="text-3xl font-extrabold text-navy">AI Tutor</h1>
           <p className="font-semibold text-navy/60">
-            Lumi adapts the explanation to how you learn — pick a mode.
+            Lumi adapts the explanation to how you learn: pick a mode.
           </p>
         </div>
         <Mascot thinking={busy} className="h-32 w-32" />
@@ -107,7 +107,7 @@ export default function TutorPage() {
         <Card className="bg-lavender">
           <p className="font-bold text-navy">
             Socratic mode: Lumi won&apos;t hand you answers. It asks, you think,
-            and the misunderstanding surfaces early — where it&apos;s cheapest to fix.
+            and the misunderstanding surfaces early: where it&apos;s cheapest to fix.
           </p>
         </Card>
       ) : null}
@@ -119,7 +119,7 @@ export default function TutorPage() {
             <div className="grid h-full place-items-center py-10 text-center">
               <div>
                 <p className="text-xl font-extrabold text-navy/70">
-                  Ask anything. Say “I don&apos;t understand this” — that&apos;s enough.
+                  Ask anything. Say “I don&apos;t understand this”, that&apos;s enough.
                 </p>
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
                   {["Explain recursion", "Why is this O(n²)?", "Teach me eigenvectors"].map((s) => (

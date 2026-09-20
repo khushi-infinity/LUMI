@@ -10,7 +10,7 @@ import type { MemoryStore } from "@/lib/memory/store";
 import type { ConceptMastery, LearningEvent, PlanItem, StudentProfile } from "@/lib/types";
 
 /**
- * DynamoDBStore — production memory (spec §32).
+ * DynamoDBStore: production memory (spec §32).
  * Single-table design keyed on student_id:
  *   PK=student#<id>  SK=profile|plan|mastery#<concept>|event#<ts>
  * Env: DYNAMODB_TABLE_NAME

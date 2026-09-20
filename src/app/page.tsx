@@ -38,7 +38,7 @@ export default async function HomePage() {
               something today?
             </h1>
             <p className="mt-3 font-semibold text-navy/60">
-              {profile.goals[0]} — you&apos;re on a {profile.streak}-day streak 🔥
+              {profile.goals[0]}: you&apos;re on a {profile.streak}-day streak 🔥
             </p>
             <Link href="/tutor" className="btn-primary mt-6 inline-block text-lg">
               Continue Learning →
@@ -93,7 +93,7 @@ export default async function HomePage() {
         <SectionTitle>Today&apos;s plan</SectionTitle>
         <PlanList items={plan} />
         <p className="mt-4 text-sm font-bold text-navy/50">
-          {done}/{plan.length} done — keep the loop going: learn → practice → measure.
+          {done}/{plan.length} done: keep the loop going: learn → practice → measure.
         </p>
       </Card>
     </div>
