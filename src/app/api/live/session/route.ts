@@ -42,6 +42,8 @@ export async function POST() {
       grant: {
         room,
         roomJoin: true,
+        roomCreate: true,
+        roomList: true,
         canPublish: true,
         canSubscribe: true,
         canPublishData: true,
@@ -78,6 +80,8 @@ export async function POST() {
       grant: {
         room,
         roomJoin: true,
+        roomCreate: false,
+        roomList: false,
         canPublish: true,
         canSubscribe: true,
         canPublishData: true,

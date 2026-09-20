@@ -7,6 +7,8 @@ import crypto from "node:crypto";
 export interface VideoGrant {
   room: string;
   roomJoin: boolean;
+  roomCreate: boolean;
+  roomList: boolean;
   canPublish: boolean;
   canSubscribe: boolean;
   canPublishData: boolean;
