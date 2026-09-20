@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/*
+ * LUMI design system (spec §37–42)
+ * Bright and energetic, not corporate SaaS.
+ * Duolingo personality × Linear usability × premium AI aesthetics.
+ */
+@theme {
+  --color-sky-electric: #3bb4f6; /* dominant background */
+  --color-sky-deep: #1a9de8;
+  --color-coral: #ff7a59; /* CTA + accents */
+  --color-coral-deep: #f45d38;
+  --color-cream: #fff6ea; /* soft surfaces */
+  --color-navy: #12224b; /* dark ink */
+  --color-lavender: #e6e2ff; /* subtle supporting surface */
+  --color-lime-ok: #3ecf8e; /* mastery: strong */
+  --color-amber-mid: #ffc24b; /* mastery: developing */
+  --color-rose-low: #ff6b6b; /* mastery: needs attention */
+  --color-cloud: #f2f9ff; /* near-white card */
+
+  --radius-card: 24px; /* spec §38: large rounded corners */
+  --font-sans: var(--font-nunito), ui-rounded, system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-sky-electric);
+  color: var(--color-navy);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Signature card surface */
+.card {
+  background: var(--color-cloud);
+  border-radius: var(--radius-card);
+  box-shadow:
+    0 1px 0 rgba(18, 34, 75, 0.04),
+    0 12px 32px -12px rgba(18, 34, 75, 0.18);
+}
+
+/* One primary action per screen (spec §38) */
+.btn-primary {
+  background: var(--color-coral);
+  color: white;
+  font-weight: 800;
+  border-radius: 9999px;
+  padding: 0.8rem 1.6rem;
+  box-shadow: 0 8px 20px -6px rgba(244, 93, 56, 0.55);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.btn-primary:hover {
+  background: var(--color-coral-deep);
+  transform: translateY(-1px);
+}
+.btn-secondary {
+  background: white;
+  color: var(--color-navy);
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.8rem 1.6rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px -10px rgba(18, 34, 75, 0.35);
+}
+
+/* Animated progress bar (spec §41) */
+.progress-track {
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.progress-fill {
+  background: linear-gradient(90deg, var(--color-lime-ok), var(--color-coral));
+  border-radius: 9999px;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
