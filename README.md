@@ -1,168 +1,179 @@
-# LUMI
+# LUMI.
 
-> Your AI tutor that sees, hears, teaches and learns with you.
+> **The AI tutor that sees, hears, teaches, and learns with you.**
+> Most AI tutors answer questions. LUMI builds an evolving model of how *you* learn.
 
-Lumi is a **multimodal AI learning companion**: students ask through text or
-voice, speak to a real-time digital-human tutor, scan textbooks and diagrams,
-submit handwritten solutions for mistake analysis, take adaptive quizzes, and
-get study plans that reshape themselves around detected weaknesses.
+LUMI is a multimodal AI learning companion built for the **Bharat Builds Tour: First Commit** hackathon (WeMakeDevs × AWS). Students ask through text or voice, speak to a real-time digital human, scan textbooks / handwritten work / PDFs, take adaptive quizzes, and get study plans that reshape themselves around measured weaknesses.
 
-Most AI tutors answer questions. **Lumi builds an evolving model of how you
-learn** (mastery, mistakes, goals, plans, progress) and adapts what you
-should learn next. The combination is the product.
+| Home (FUNTYX-style hero) | Live digital-human tutor |
+| --- | --- |
+| ![Home](docs/screenshots/home.png) | ![Live](docs/screenshots/live.png) |
 
-## Demo
+| AI Tutor (Socratic mode) | Progress (knowledge graph + streak calendar) |
+| --- | --- |
+| ![Tutor](docs/screenshots/tutor.png) | ![Progress](docs/screenshots/progress.png) |
 
-Run locally with zero AWS setup (demo mode, seeded student data):
+> 📸 Drop your 4 screenshots into `docs/screenshots/` with these names and they render above.
+
+---
+
+## 🧠 The problem
+
+Students juggle 8+ disconnected tools, and every AI tutor has amnesia:
+
+- It doesn't know what you already understand
+- It doesn't know what you got wrong yesterday
+- It can't see your textbook or your handwritten solution
+- It never says "you keep failing boundary conditions, let's fix *that*"
+
+**LUMI closes the loop:**
+
+```
+LEARN → PRACTICE → MEASURE → FIND WEAKNESS → REINFORCE → PLAN NEXT STEP → LEARN
+```
+
+Every interaction becomes a **learning event** that updates a per-concept **mastery model** in DynamoDB, and the plan reshapes itself around it.
+
+---
+
+## ✨ What it does
+
+| Area | What you get |
+| --- | --- |
+| 🏠 **Home** | FUNTYX-style hero: giant display mission title, glass chips, circular play CTA, 3D mascot bleeding off the frame |
+| 💬 **AI Tutor** | 7 explanation modes: simple, detailed, visual, example-first, exam-focused, interview, **Socratic** (asks instead of answering). Scrollable chat window |
+| 🎥 **Live Tutor** | Real-time **digital human** (Beyond Presence avatar) streamed over **LiveKit**, speaks with **Sarvam** Indian-voice TTS, mic toggle → speech → transcript → spoken reply |
+| 📸 **Scan & Learn** | Upload a **photo or PDF**: textbook pages, handwritten solutions, diagrams → topic, concepts, and mistake-level feedback ("you moved +5 without flipping its sign") |
+| 🏋️ **Practice** | Adaptive MCQs on **any topic you type**; wrong answers feed mastery; flashcards + revision notes per topic |
+| 📊 **Progress** | Knowledge graph (🟢🟡🔴 mastery states), GitHub-style streak calendar, concept mastery bars, live event feed |
+
+---
+
+## 🏗️ Architecture
+
+```
+                    ┌────────────────────────────┐
+                    │   Next.js (App Router)     │
+                    │   TS · Tailwind · R3F 3D   │
+                    └─────────────┬──────────────┘
+                                  │  (frontend never calls AI directly)
+                    ┌─────────────▼──────────────┐
+                    │      Route handlers        │   /api/tutor/chat · /api/quiz/*
+                    │   (API Gateway/Lambda-ready)│  /api/scan/analyze · /api/notes
+                    └─────────────┬──────────────┘        /api/planner/* · /api/live/session
+              ┌───────────────────┼────────────────────┐
+              ▼                   ▼                    ▼
+    ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐
+    │  Amazon Bedrock  │ │    DynamoDB      │ │  Sarvam / Bey    │
+    │  Nova Lite       │ │  single-table    │ │  (via backend    │
+    │  Converse API    │ │  student memory  │ │   proxies)       │
+    │  text + vision   │ │  mastery·events  │ │  voice + avatar  │
+    └──────────────────┘ └──────────────────┘ └──────────────────┘
+```
+
+**Hard architectural rules** (why this stands apart):
+
+1. **The frontend never orchestrates AI.** Everything goes through server routes → API-Gateway/Lambda migration is 1:1.
+2. **Every AI surface has a JSON schema** (spec §49). No arbitrary LLM blobs: `Explanation`, `Quiz`, `Notes`, `ScanResult`, `StudyPlan` are typed.
+3. **Three swappable provider interfaces**, so vendors never leak into product code:
+
+| Concern | Interface | Live | Fallback |
+| --- | --- | --- | --- |
+| AI reasoning | `AiProvider` | `BedrockProvider` (Nova) | `DemoProvider` (pedagogically real canned brain) |
+| Student memory | `MemoryStore` | `DynamoDBStore` | `DemoStore` (seeded) |
+| Voice | `VoiceProvider` | `SarvamVoiceProvider` | `BrowserVoiceProvider` (Web Speech) |
+
+4. **The app never breaks because an API did.** Every Bedrock call is wrapped: failure → demo brain → screen keeps working. Same for voice.
+5. **Keys never touch the browser.** Sarvam and Bey run through backend proxies (spec §63).
+
+---
+
+## ☁️ How AWS powers it (the honest list)
+
+| Service | Role in LUMI |
+| --- | --- |
+| **Amazon Bedrock** (Converse API) | Central brain: tutoring, structured quiz/notes/plan generation, adaptive diagnostics |
+| **Amazon Nova Lite** | Multimodal vision: OCR, textbook pages, diagrams, handwriting analysis (Scan & Learn) |
+| **Amazon DynamoDB** | Single-table learning memory: `PK=student#id`, `SK=profile \| plan \| mastery#concept \| event#ts`. Every quiz answer `ADD`s to mastery counters atomically |
+| **Amazon S3** | Learning-material storage configuration (bucket `lumi-learning-material`) |
+| **IAM** | Least-privilege dev user: Bedrock + DynamoDB + S3 managed policies |
+| **AWS Amplify Hosting** | Deployment + CI on every push (this URL) |
+
+> Student-verifier bonus: built on AWS free tier + student credits. 🎓
+
+**The full AWS loop in one user flow:** student submits a quiz → Lambda-style handler grades it → **DynamoDB** mastery counters update atomically → weaknesses detected → **Bedrock** generates targeted reinforcement questions → **EventBridge-shaped plan service** splices revision into tomorrow → Progress screen reflects the new mastery. That loop is the product.
+
+---
+
+## 🚀 Run it locally (zero keys needed)
 
 ```bash
+git clone https://github.com/khushi-infinity/LUMI.git
+cd LUMI
 npm install
-npm run dev
+npm run dev          # http://localhost:3000 — full app in demo mode
 ```
 
-## Problem
+To go live on AWS, `cp .env.example .env.local` and fill:
 
-Students juggle YouTube + ChatGPT + Notion + Anki + Calendar + quiz apps.
-The student becomes the system connecting all of them: and current AI tutors
-don't know what the student already understands, what they got wrong yesterday,
-or what's in their textbook.
-
-## Solution: the learning loop
-
-```
-LEARN → PRACTICE → MEASURE → FIND WEAKNESS → REINFORCE → PLAN NEXT STEP
-```
-
-Every meaningful interaction becomes a **learning event** that updates the
-student's mastery model and reshapes their plan.
-
-## Key features (hackathon MVP, spec §56)
-
-| Area | What it does |
-| --- | --- |
-| **Home** | Personalized command center: greeting, 3D mascot, progress, today's plan, streak |
-| **AI Tutor** | Text chat with explanation modes incl. **Socratic mode**: asks instead of answering |
-| **Live Tutor** | Real-time digital-human session (Beyond Presence avatar via LiveKit, voice via Sarvam → browser fallback) |
-| **Scan & Learn** | Textbook / handwriting / diagram analysis with misconception detection |
-| **Practice** | Adaptive quizzes: weak concepts first; every submit updates mastery |
-| **Progress** | Knowledge graph (🟢🟡🔴 states), concept mastery, streak, learning event feed |
-
-## How it works
-
-```
-Student → Next.js UI → API routes → Learning Engine → AI provider
-                                        │
-                     memory (DynamoDB) ─┴─ AI (Bedrock + Nova vision)
+```bash
+AWS_REGION=us-west-2            # where Nova Lite is invocable for your account
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+BEDROCK_MODEL_ID=amazon.nova-lite-v1:0
+DYNAMODB_TABLE_NAME=lumi-student-state
+SARVAM_API_KEY=...              # Indian-language voice (optional)
+BEY_API_KEY=...                 # digital human (optional)
+BEY_AVATAR_ID=...
+LIVEKIT_URL=wss://...
+LIVEKIT_API_KEY=...
+LIVEKIT_API_SECRET=...
 ```
 
-- The **frontend never orchestrates AI directly**: every AI call goes through
-  API Gateway-equivalent route handlers (spec, final architecture note).
-- Every AI surface has a **structured output schema** (spec §49): explanations,
-  quizzes, notes, scans, plans. No arbitrary LLM blobs.
+Then `node scripts/aws-setup.cjs` (validates creds, tests Bedrock, creates the DynamoDB table) and `node scripts/seed-dynamodb.cjs` (seeds the demo student).
 
-## Architecture
+---
+
+## 📂 Project structure
 
 ```
 src/
-├── app/
-│   ├── page.tsx              # Home dashboard
-│   ├── tutor/                # AI Tutor chat (+ modes, Socratic)
-│   ├── live/                 # Live digital-human tutor
-│   ├── scan/                 # Scan & Learn
-│   ├── practice/             # Adaptive quizzes
-│   ├── progress/             # Knowledge graph + mastery
-│   └── api/                  # tutor/chat · scan/analyze · quiz/* · notes/
-│                             # planner/* · progress · memory · sessions/*
-├── components/               # NavBar, mascot (R3F), knowledge graph, ui kit
+├── app/            # Home · Tutor · Live · Scan · Practice · Progress + /api/*
+├── components/     # NavBar · 3D mascot (R3F) · KnowledgeGraph · ui kit
 └── lib/
-    ├── ai/                   # AiProvider interface · BedrockProvider · DemoProvider
-    ├── memory/               # MemoryStore interface · DynamoDBStore · DemoStore
-    ├── voice/                # VoiceProvider · SarvamProvider · BrowserProvider
-    ├── learning-engine.ts    # context retrieval + learning events
-    ├── planner-service.ts    # dynamic study plans
-    ├── quiz-service.ts       # adaptive quiz generation/grading
-    └── types.ts              # structured AI output schemas
+    ├── ai/         # AiProvider · BedrockProvider · DemoProvider · resilience wrapper
+    ├── memory/     # MemoryStore · DynamoDBStore · DemoStore
+    ├── voice/      # VoiceProvider · Sarvam (proxy) · Browser fallback
+    ├── livekit.ts  # scoped JWT token signing for avatar rooms
+    └── learning-engine.ts   # context assembly + learning events
+scripts/            # aws-setup · seed-dynamodb · smoke tests
+docs/architecture.md
+PROGRESS.md         # honest done/remaining tracker
 ```
 
-## AWS integration
+---
 
-| Service | Role |
-| --- | --- |
-| **Bedrock** | Central AI: tutoring, reasoning, quiz/notes generation (Converse API) |
-| **Amazon Nova** (Lite/2 Lite) | Multimodal vision: OCR, diagrams, handwriting analysis |
-| **S3** | Learning material storage (PDFs, scans, artifacts) |
-| **Bedrock Knowledge Bases** | RAG over the student's own textbooks (source of truth) |
-| **DynamoDB** | Learning state: profile, mastery, plan, events (single-table) |
-| **Lambda + API Gateway** | Production home for the route handlers |
-| **EventBridge** | Spaced-repetition scheduling, daily plans, streak processing |
-| **Cognito** | Auth (optional; demo mode runs without it) |
+## 🎬 3-minute demo script
 
-Provider selection is automatic: AWS credentials present → Bedrock/DynamoDB.
-Otherwise → demo providers with identical behavior.
+1. **0:00** Home: "LUMI knows my goal and my streak" → Continue Learning
+2. **0:20** Tutor: Socratic mode asks back instead of answering
+3. **0:50** Scan: drop a textbook PDF → topic, concepts, next actions
+4. **1:20** Live: digital human appears, tap mic, speak, Lumi answers **out loud**
+5. **1:50** Practice: quiz on "Photosynthesis" (any topic), submit → weakness detected
+6. **2:20** Progress: mastery graph moved, plan auto-reinforced, streak calendar
+7. **2:40** Architecture slide: Bedrock → DynamoDB → adaptive loop. "Lumi doesn't just answer students; it understands how they learn."
 
-## Voice architecture (spec §11, §44)
+---
 
-```
-VoiceService
-├── SarvamVoiceProvider   (Saaras STT · Bulbul TTS · Indian languages, code-mixed)
-└── BrowserVoiceProvider  (Web Speech API fallback: always available)
-```
+## 🗺️ Status & roadmap
 
-Keys stay server-side; voice calls proxy through the backend.
+See **[PROGRESS.md](PROGRESS.md)** for the honest build tracker.
+Next up: SM-2 spaced repetition, learning-aware Pomodoro, Cognito auth, Bedrock Knowledge Bases RAG over uploaded textbooks, avatar lip-sync piping.
 
-## Beyond Presence integration (spec §10)
+## 🙌 Credits
 
-Beyond Presence is the **face, not the brain**: your AI agent (Bedrock +
-memory + tools) drives conversation; Beyond Presence renders the digital human
-over LiveKit. See `src/app/live/page.tsx` for the integration points.
+Amazon Bedrock · Amazon Nova · Amazon DynamoDB · Sarvam AI · Beyond Presence · LiveKit · Next.js · React Three Fiber · WeMakeDevs × AWS Bharat Builds Tour.
 
-## Tech stack
+## 📄 License
 
-Next.js (App Router) · TypeScript · Tailwind CSS v4 · Framer Motion-ready ·
-React Three Fiber (mascot only: don't turn the app into a WebGL experiment) ·
-lucide-react · AWS SDK v3.
-
-## Getting started
-
-```bash
-cp .env.example .env.local   # optional: demo mode needs nothing
-npm install
-npm run dev
-```
-
-## Environment variables
-
-See `.env.example` (spec §46). Secrets are never committed and never exposed
-to the browser bundle.
-
-## Local development
-
-```bash
-npm run dev         # start dev server
-npm run typecheck   # strict TS check
-npm run build       # production build
-```
-
-## Roadmap
-
-Secondary (spec §57): notes UI, flashcards review, Pomodoro, calendar, spaced
-repetition scheduler, multilingual voice. Stretch: live whiteboard, real-time
-handwriting, collaborative study, teacher mode.
-
-## Limitations
-
-- Demo mode data is in-memory and resets on restart.
-- Sarvam/Beyond Presence integrations are stubbed with documented wire-up
-  points; they activate via env vars when hackathon credits are available.
-- Spaced repetition currently uses a simple bounded mastery update, not the
-  full SM-2-style scheduler.
-
-## Credits
-
-Amazon Web Services (Bedrock, Nova, DynamoDB, S3) · Sarvam AI · Beyond
-Presence · LiveKit · Next.js · React Three Fiber · Three.js · lucide-react ·
-open-source libraries.
-
-## License
-
-MIT (add LICENSE file before publishing).
+MIT.
