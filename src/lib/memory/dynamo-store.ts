@@ -76,12 +76,19 @@ export class DynamoDBStore implements MemoryStore {
         TableName: this.table,
         Key: { PK: this.pk, SK: `mastery#${concept}` },
         UpdateExpression:
-          "ADD attempts :one, correct :c, incorrect :w SET last_reviewed = :now",
+          "ADD attempts :one, correct :c, incorrect :w " +
+          "SET last_reviewed = :now, " +
+          "concept = if_not_exists(concept, :concept), " +
+          "label = if_not_exists(label, :label), " +
+          "mastery_score = if_not_exists(mastery_score, :ms)",
         ExpressionAttributeValues: {
           ":one": 1,
           ":c": correct ? 1 : 0,
           ":w": correct ? 0 : 1,
           ":now": new Date().toISOString(),
+          ":concept": concept,
+          ":label": concept.replace(/_/g, " "),
+          ":ms": 0.4,
         },
       }),
     );
