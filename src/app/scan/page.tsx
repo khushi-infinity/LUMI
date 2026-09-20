@@ -20,31 +20,39 @@ export default function ScanPage() {
     setBusy(true);
     setError(null);
     setResult(null);
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const dataUrl = String(reader.result);
-      setPreview(dataUrl);
-      const base64 = dataUrl.split(",")[1] ?? "";
-      try {
-        const res = await fetch("/api/scan/analyze", {
+    const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+    try {
+      let res: Response;
+      if (isPdf) {
+        setPreview(null);
+        const fd = new FormData();
+        fd.append("file", file);
+        res = await fetch("/api/scan/analyze", { method: "POST", body: fd });
+      } else {
+        const dataUrl = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result));
+          reader.readAsDataURL(file);
+        });
+        setPreview(dataUrl);
+        res = await fetch("/api/scan/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            imageBase64: base64,
+            imageBase64: dataUrl.split(",")[1] ?? "",
             mimeType: file.type || "image/jpeg",
             currentTopic: "Binary Search",
           }),
         });
-        const data = (await res.json()) as ScanResult & { error?: string };
-        if (data.error) setError(data.error);
-        else setResult(data);
-      } catch {
-        setError("Analysis failed: try again.");
-      } finally {
-        setBusy(false);
       }
-    };
-    reader.readAsDataURL(file);
+      const data = (await res.json()) as ScanResult & { error?: string };
+      if (data.error) setError(data.error);
+      else setResult(data);
+    } catch {
+      setError("Analysis failed: try again.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -91,14 +99,14 @@ export default function ScanPage() {
               <>
                 <Camera className="h-12 w-12 text-navy/50" aria-hidden />
                 <span className="font-extrabold text-navy/70">
-                  Drop a photo, or click to browse
+                  Drop a photo or PDF, or click to browse
                 </span>
               </>
             )}
             <input
               ref={fileRef}
               type="file"
-              accept="image/*"
+              accept="image/*,.pdf"
               className="hidden"
               onChange={(e) => {
                 const f = e.target.files?.[0];

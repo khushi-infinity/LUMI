@@ -29,6 +29,10 @@ export interface AiProvider {
     mimeType: string;
     currentTopic?: string;
   }): Promise<ScanResult>;
+  analyzeText(params: {
+    text: string;
+    currentTopic?: string;
+  }): Promise<ScanResult>;
   generatePlan(input: {
     goal: string;
     days: number;

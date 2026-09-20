@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Loader2 } from "lucide-react";import { Card, SectionTitle } from "@/components/ui";
-import type { Quiz, QuizResult } from "@/lib/types";
+import { Layers, Loader2, NotebookPen } from "lucide-react";
+import { Card, SectionTitle } from "@/components/ui";
+import type { Notes, Quiz, QuizResult } from "@/lib/types";
 
 type Phase = "idle" | "quiz" | "result";
 
@@ -14,7 +15,26 @@ export default function PracticePage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<QuizResult | null>(null);
   const [busy, setBusy] = useState(false);
+  const [tab, setTab] = useState<"quiz" | "notes">("quiz");
+  const [notes, setNotes] = useState<Notes | null>(null);
+  const [flipped, setFlipped] = useState<Record<number, boolean>>({});
   const startedAt = useRef<number>(0);
+
+  async function loadNotes(t = topic) {
+    setBusy(true);
+    try {
+      const res = await fetch("/api/notes/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: t }),
+      });
+      setNotes((await res.json()) as Notes);
+      setFlipped({});
+      setTab("notes");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function generate(t = topic) {
     setBusy(true);
@@ -91,7 +111,9 @@ export default function PracticePage() {
               Quiz me on it
             </button>
           </form>
-          <p className="mt-3 mb-1 text-sm font-extrabold text-navy/50">Or start from a suggested topic:</p>
+          <p className="mt-3 mb-1 text-sm font-extrabold text-navy/50">
+            Or start from a suggested topic:
+          </p>
           <div className="flex flex-wrap gap-2">
             {["Binary Search", "Binary Trees", "Recursion", "Arrays"].map((t) => (
               <button
@@ -107,11 +129,83 @@ export default function PracticePage() {
               </button>
             ))}
           </div>
+          <button
+            onClick={() => {
+              const t = customTopic.trim() || topic;
+              if (t) loadNotes(t);
+            }}
+            disabled={busy || !(customTopic.trim() || topic)}
+            className="mt-5 flex items-center gap-2 text-sm font-extrabold text-navy underline decoration-coral decoration-2 underline-offset-4 disabled:opacity-40"
+          >
+            <NotebookPen className="h-4 w-4" aria-hidden />
+            Or generate notes &amp; flashcards for this topic
+          </button>
           <p className="mt-4 text-sm font-semibold text-navy/50">
             Lumi already weights questions toward your weak concepts (boundary
             conditions, we&apos;re looking at you 👀).
           </p>
         </Card>
+      ) : null}
+
+      {/* Notes & flashcards view */}
+      {tab === "notes" && notes ? (
+        <div className="space-y-5">
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 className="text-2xl font-black text-navy">{notes.topic}: revision kit</h2>
+            <button onClick={() => setTab("quiz")} className="btn-secondary ml-auto text-sm">
+              <Layers className="h-4 w-4" aria-hidden /> Back to quiz
+            </button>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2">
+            <Card>
+              <SectionTitle>Quick notes</SectionTitle>
+              <ul className="space-y-2">
+                {notes.quick_notes.map((n, i) => (
+                  <li key={i} className="flex gap-2 font-semibold text-navy/80">
+                    <span className="text-coral">•</span> {n}
+                  </li>
+                ))}
+              </ul>
+              <SectionTitle>Exam sheet</SectionTitle>
+              <ul className="space-y-2">
+                {notes.exam_sheet.map((n, i) => (
+                  <li key={i} className="flex gap-2 font-semibold text-navy/80">
+                    <span className="text-lime-ok">✓</span> {n}
+                  </li>
+                ))}
+              </ul>
+            </Card>
+            <Card>
+              <SectionTitle>60-second explanation</SectionTitle>
+              <p className="font-semibold text-navy/80">{notes.sixty_second_explanation}</p>
+              <SectionTitle>Common mistakes</SectionTitle>
+              <ul className="space-y-2">
+                {notes.common_mistakes.map((n, i) => (
+                  <li key={i} className="flex gap-2 font-semibold text-navy/80">
+                    <span className="text-rose-low">✗</span> {n}
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </div>
+          <Card>
+            <SectionTitle>Flashcards: tap to flip</SectionTitle>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {notes.flashcards.map((f, i) => (
+                <button
+                  key={i}
+                  onClick={() => setFlipped((s) => ({ ...s, [i]: !s[i] }))}
+                  className="min-h-36 rounded-3xl bg-lavender p-5 text-left transition-colors hover:bg-[#dcd6ff]"
+                >
+                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-navy/40">
+                    {flipped[i] ? "Answer" : "Question"}
+                  </p>
+                  <p className="mt-2 font-bold text-navy">{flipped[i] ? f.answer : f.question}</p>
+                </button>
+              ))}
+            </div>
+          </Card>
+        </div>
       ) : null}
 
       {phase === "quiz" && quiz ? (

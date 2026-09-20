@@ -118,6 +118,17 @@ export class BedrockProvider implements AiProvider {
     return parseJson<ScanResult>(raw) ?? this.demo.analyzeImage(params);
   }
 
+  async analyzeText(params: {
+    text: string;
+    currentTopic?: string;
+  }): Promise<ScanResult> {
+    const raw = await this.converse(
+      'You are Lumi\'s document engine. The student uploaded a document. Return ONLY minified JSON: {topic, kind:"textbook", concepts:string[], summary, mistakes?:[{step,issue,fix}], actions:["explain","quiz","notes","flashcards","add_to_plan"]}. Identify the main topic, key concepts, and any worked examples or errors.',
+      `Student topic: ${params.currentTopic ?? "unknown"}. Document text (truncated):\n\n${params.text.slice(0, 8000)}`,
+    );
+    return parseJson<ScanResult>(raw) ?? this.demo.analyzeText(params);
+  }
+
   async generatePlan(input: {
     goal: string;
     days: number;

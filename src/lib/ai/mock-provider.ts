@@ -105,6 +105,20 @@ export class DemoProvider implements AiProvider {
     };
   }
 
+  async analyzeText(params: {
+    text: string;
+    currentTopic?: string;
+  }): Promise<ScanResult> {
+    const head = params.text.slice(0, 400).replace(/\s+/g, " ");
+    return {
+      topic: "Uploaded document",
+      kind: "textbook",
+      concepts: ["Main topic", "Key definitions", "Worked examples", "Formulas"],
+      summary: `I read your document (${params.text.split(/\s+/).length} words). It opens with: "${head.slice(0, 220)}…". Add AWS credentials to unlock full AI analysis of every page.`,
+      actions: ["explain", "quiz", "notes", "flashcards", "add_to_plan"],
+    };
+  }
+
   async generatePlan(input: {
     goal: string;
     days: number;

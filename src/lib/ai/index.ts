@@ -10,8 +10,8 @@ import { DemoProvider } from "@/lib/ai/mock-provider";
  */
 class ResilientProvider implements AiProvider {
   readonly name = "bedrock+fallback";
-  private primary: AiProvider | null = null;
   private fallback = new DemoProvider();
+  private primary: AiProvider | null = null;
 
   constructor() {
     if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
@@ -48,6 +48,9 @@ class ResilientProvider implements AiProvider {
   }
   analyzeImage(params: Parameters<AiProvider["analyzeImage"]>[0]) {
     return this.withFallback((p) => p.analyzeImage(params));
+  }
+  analyzeText(params: Parameters<AiProvider["analyzeText"]>[0]) {
+    return this.withFallback((p) => p.analyzeText(params));
   }
   generatePlan(input: Parameters<AiProvider["generatePlan"]>[0]) {
     return this.withFallback((p) => p.generatePlan(input));
