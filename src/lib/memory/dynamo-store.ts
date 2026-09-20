@@ -6,6 +6,7 @@ import {
   QueryCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { awsConfig } from "@/lib/aws-creds";
 import type { MemoryStore } from "@/lib/memory/store";
 import type { ConceptMastery, LearningEvent, PlanItem, StudentProfile } from "@/lib/types";
 
@@ -21,7 +22,11 @@ export class DynamoDBStore implements MemoryStore {
   private studentId: string;
 
   constructor(studentId = "demo-student") {
-    const client = new DynamoDBClient({ region: process.env.AWS_REGION });
+    const cfg = awsConfig();
+    const client = new DynamoDBClient({
+      region: cfg.region,
+      ...(cfg.credentials ? { credentials: cfg.credentials } : {}),
+    });
     this.doc = DynamoDBDocumentClient.from(client);
     this.table = process.env.DYNAMODB_TABLE_NAME || "lumi-student-state";
     this.studentId = studentId;

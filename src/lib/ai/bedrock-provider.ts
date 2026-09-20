@@ -3,6 +3,7 @@ import {
   ConverseCommand,
   type Message,
 } from "@aws-sdk/client-bedrock-runtime";
+import { awsConfig } from "@/lib/aws-creds";
 import type { AiProvider, TutorRequest } from "@/lib/ai/provider";
 import { DemoProvider } from "@/lib/ai/mock-provider";
 import type {
@@ -29,7 +30,11 @@ export class BedrockProvider implements AiProvider {
   private demo = new DemoProvider();
 
   constructor(region?: string) {
-    this.client = new BedrockRuntimeClient({ region: region ?? process.env.AWS_REGION });
+    const cfg = awsConfig();
+    this.client = new BedrockRuntimeClient({
+      region: region ?? cfg.region,
+      ...(cfg.credentials ? { credentials: cfg.credentials } : {}),
+    });
     this.modelId = process.env.BEDROCK_MODEL_ID || "amazon.nova-lite-v1:0";
   }
 

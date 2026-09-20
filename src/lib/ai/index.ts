@@ -1,4 +1,5 @@
 import type { AiProvider } from "@/lib/ai/provider";
+import { hasAwsCredentials } from "@/lib/aws-creds";
 import { BedrockProvider } from "@/lib/ai/bedrock-provider";
 import { DemoProvider } from "@/lib/ai/mock-provider";
 
@@ -14,7 +15,7 @@ class ResilientProvider implements AiProvider {
   private primary: AiProvider | null = null;
 
   constructor() {
-    if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
+    if (hasAwsCredentials()) {
       try {
         this.primary = new BedrockProvider();
       } catch (e) {
